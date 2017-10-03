@@ -12,6 +12,8 @@ var routes = require('./controllers/burgers_controllers.js');
 
 app.use('/', routes);
 
+var db = require('./models');
+
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,6 +27,8 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 // Start the express app.
-app.listen(port, function () {
-    console.log("App listening on PORT " + port);
-});
+// db.sequelize.sync({ force: true }).then(function(){
+    app.listen(port, function () {
+        console.log("App listening on PORT " + port);
+    });
+// })
