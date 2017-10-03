@@ -15,10 +15,10 @@ var source = {
         password: 'ck6cjje8r5tdhzcd',
         database: 'burgers_db'
     }
-}
+};
 
 var selectedSource = source.jawsDB;
-
+// var selectedSource = source.localhost;
 
 var sequelize = new Sequelize(selectedSource.database, selectedSource.user, selectedSource.password, {
     host: selectedSource.host,
