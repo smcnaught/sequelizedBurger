@@ -1,8 +1,10 @@
 var express = require('express');
-var router = express.Router();
+var app = express();
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var models = require('../models');
+
+app.use(express.static(__dirname + '/public'));
 
 // Extracts the sequelize connection from the models object
 var sequelizeConnection = models.sequelize;
@@ -10,12 +12,12 @@ var sequelizeConnection = models.sequelize;
 // Sync the tables
 sequelizeConnection.sync();
 
-router.get('/', function (req, res) {
-    res.redirect('/index');
+app.get('/', function (req, res) {
+    res.render('/index');
 });
 
 // Index Page - initial render to the DOM.
-router.get('/index', function (req, res) {
+app.get('/index', function (req, res) {
     models.burgers.findAll({}).then(function (data) {
         var hbsObject = { burgers: data }
         console.log(hbsObject);
@@ -23,13 +25,13 @@ router.get('/index', function (req, res) {
     });
 });
 
-router.post('/burger/create', function (req, res) {
+app.post('/burger/create', function (req, res) {
     models.burgers.create({ burger_name: req.body.burger_name }, { devoured: req.body.devoured }).then(function (data) {
         res.redirect('/index')
     })
 });
 
-router.post('/burger/eat/:id', function (req, res) {
+app.post('/burger/eat/:id', function (req, res) {
     burger.update({ devoured: req.body.devoured }, {
         fields: ['devoured'],
         where: { id: req.params.id }
@@ -38,4 +40,4 @@ router.post('/burger/eat/:id', function (req, res) {
     });
 });
 
-module.exports = router;
+module.exports = app;
