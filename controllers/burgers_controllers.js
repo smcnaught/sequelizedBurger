@@ -1,82 +1,91 @@
-// Inside the burgers_controller.js file, import 
-// the following: Express, burger.js
+// Node dependencies
 var express = require('express');
-var burgers = require('../models/burger.js');
 var router = express.Router();
+var models = require('../models');
 
-// Create the router for the app, and export 
-// the router at the end of your file.
+var sequelizeConnection = models.sequelize;
 
-router.get('/', function(req, res){
-	res.redirect('/burgers')
+sequelizeConnection.sync();
+
+router.get('/', function (req, res) {
+    res.redirect('/index');
 });
 
-router.get('/burgers', function(req, res){
-	burgers.all(function(data){
-		var hbsObject = {burgers: data};
+// Index Page (render all burgers to DOM)
+router.get('/index', function (req, res) {
 
-		console.log(hbsObject);
+    // Sequelize Query to get all burgers from database (and join them to their devourers, if applicable)
+    models.burgers.findAll({
+        include: [{ model: models.devourers }]
+    }).then(function (data) {
 
-		res.render('index', hbsObject);
-	});
+        // Pass the returned data into a Handlebars object and then render it
+        var hbsObject = { burgers: data };
+        // console.log(data);
+        res.render('index', hbsObject);
+
+    })
+
 });
 
-router.post('/burgers/create', function(req, res){
-	burgers.create(['burger_name'], [req.body.burg_name], function(data){
-		res.redirect('/burgers')
-	});
+
+// Create a New Burger
+router.post('/burger/create', function (req, res) {
+
+    // Sequelize Query to add new burger to database
+    models.burgers.create(
+        {
+            burger_name: req.body.burger_name,
+            devoured: false
+        }
+    ).then(function () {
+        // After the burger is added to the database, refresh the page
+        res.redirect('/index');
+    });
+
 });
 
-router.put('/burgers/update/:id', function(req, res){
-	var condition = 'id = ' + req.params.id;
 
-	console.log('condition ', condition);
 
-	burgers.update({'devoured': req.body.devoured}, condition, function(data){
-		res.redirect('/burgers');
-	});
+// Devour a Burger
+router.post('/burger/eat/:id', function (req, res) {
+
+    // If not name was added, make it "Anonymous"
+    if (req.body.burgerEater == "" || req.body.burgerEater == null) {
+        req.body.burgerEater = "Anonymous";
+    }
+
+    // Create a new burger devourer (and also associate it to the eaten burger's id)
+    models.devourers.create({
+        devourer_name: req.body.burgerEater,
+        burgerId: req.params.id
+    })
+
+        // Then, select the eaten burger by it's id
+        .then(function (newDevourer) {
+
+            models.burgers.findOne({ where: { id: req.params.id } })
+
+                // Then, use the returned burger object to...
+                .then(function (eatenBurger) {
+                    // ... Update the burger's status to devoured
+                    eatenBurger.update({
+                        devoured: true,
+                    })
+
+                        // Then, the burger is devoured, so refresh the page
+                        .then(function () {
+                            res.redirect('/index');
+                        });
+
+                });
+
+        });
+
 });
 
-module.exports = router;
-// router.get("/", function (req, res) {
-//     burger.all(function (data) {
-//         var hbsObject = {
-//             burgers: data
-//         };
-//         console.log(hbsObject);
-//         res.render("index", hbsObject);
-//     });
-// });
+// ----------------------------------------------------
 
-// router.post("/burgers/create", function (req, res) {
-//     burger.create([
-//         "burger_name", "devoured"
-//     ], [
-//             req.body.burger_name, req.body.devoured
-//         ], function () {
-//             res.redirect("/");
-//         });
-// });
 
-// router.put("/burgers/update/:id", function (req, res) {
-//     var condition = "id = " + req.params.id;
-
-//     console.log("condition", condition);
-
-//     burger.update({
-//         devoured: req.body.devoured
-//     }, condition, function () {
-//         res.redirect("/");
-//     });
-// });
-
-// router.delete("/:id", function (req, res) {
-//     var condition = "id = " + req.params.id;
-
-//     burger.delete(condition, function () {
-//         res.redirect("/");
-//     });
-// });
-
-// Export routes for server.js to use.
-// module.exports = router;
+// Export routes
+module.exports = router; F

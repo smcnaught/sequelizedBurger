@@ -1,24 +1,26 @@
-// import orm.js into burger.js
-var orm = require('../config/orm.js');
- 
-// Call the ORM functions using burger specific input for the ORM.
-var burgers = {
-    all: function (cb) {
-        orm.all("burgers", function (res) {
-            cb(res);
-        });
-    },
-    create: function (cols, vals, cb) {
-        orm.create("burgers", cols, vals, function (res) {
-            cb(res);
-        });
-    },
-    update: function (objColVals, condition, cb) {
-        orm.update("burgers", objColVals, condition, function (res) {
-            cb(res);
-        });
-    }
-};
+var Sequelize = require('sequelize');
+var model = require('../config/connection.js');
 
-// Export burgers at the end of the burger.js file.
-module.exports = burgers;
+var sequelizeBurger = model.define('sequelizeBurger', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+
+    burger_name: {
+        type: Sequelize.STRING,
+    },
+
+    devoured: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0
+    },
+    time: {
+        type: Sequelize.DATE,
+    },
+});
+
+sequelizeBurger.sync();
+
+module.exports = sequelizeBurger;
