@@ -13,7 +13,7 @@ var sequelizeConnection = models.sequelize;
 sequelizeConnection.sync();
 
 app.get('/', function (req, res) {
-    res.render('/index');
+    res.render('index');
 });
 
 // Index Page - initial render to the DOM.
@@ -26,17 +26,18 @@ app.get('/index', function (req, res) {
 });
 
 app.post('/burger/create', function (req, res) {
-    models.burgers.create({ burger_name: req.body.burger_name }, { devoured: req.body.devoured }).then(function (data) {
-        res.redirect('/index')
+    console.log(req.body);
+    models.burgers.create({ burger_name: req.body.burger_name }).then(function (data) {
+        res.redirect('/');
     })
 });
 
 app.post('/burger/eat/:id', function (req, res) {
-    burger.update({ devoured: req.body.devoured }, {
+    burgers.update({ devoured: req.body.devoured }, {
         fields: ['devoured'],
         where: { id: req.params.id }
     }).then(function (data) {
-        res.redirect('/index')
+        res.redirect('/index');
     });
 });
 
