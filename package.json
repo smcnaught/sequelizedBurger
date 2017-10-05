@@ -1,31 +1,27 @@
 {
-  "name": "eat-da-burger",
+  "name": "sequelizedburger",
   "version": "1.0.0",
-  "description": "Eat-Da-Burger!",
-  "main": "index.js",
+  "description": "sequelized version of eat the burger app",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smcnaught/Eat-Da-Burger-.git"
+    "url": "git+https://github.com/smcnaught/sequelizedBurger.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Stephanie McNaught",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/smcnaught/Eat-Da-Burger-/issues"
+    "url": "https://github.com/smcnaught/sequelizedBurger/issues"
   },
-  "homepage": "https://github.com/smcnaught/Eat-Da-Burger-#readme",
+  "homepage": "https://github.com/smcnaught/sequelizedBurger#readme",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.15.5",
+    "express": "^4.16.1",
     "express-handlebars": "^3.0.0",
-    "method-override": "^2.3.9",
-    "mysql": "^2.14.1",
+    "method-override": "^2.3.10",
     "mysql2": "^1.4.2",
-    "sequelize": "^4.13.1"
-  },
-  "devDependencies": {}
+    "sequelize": "^4.13.5"
+  }
 }
