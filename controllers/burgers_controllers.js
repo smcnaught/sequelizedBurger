@@ -12,12 +12,8 @@ var sequelizeConnection = models.sequelize;
 // Sync the tables
 sequelizeConnection.sync();
 
-router.get('/', function (req, res) {
-    res.render('index');
-});
-
 // Index Page - initial render to the DOM.
-router.get('/index', function (req, res) {
+router.get('/', function (req, res) {
     models.burgers.findAll({}).then(function (data) {
         var hbsObject = { burgers: data }
         console.log(hbsObject);
@@ -32,12 +28,12 @@ router.post('/burgers/create', function (req, res) {
     })
 });
 
-router.post('/burger/eat/:id', function (req, res) {
-    burgers.update({ devoured: req.body.devoured }, {
+router.put('/burgers/update/:id', function (req, res) {
+    models.burgers.update({ devoured: req.body.devoured }, {
         fields: ['devoured'],
         where: { id: req.params.id }
     }).then(function (data) {
-        res.redirect('/index');
+        res.redirect('/');
     });
 });
 
