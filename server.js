@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var exphbs = require("express-handlebars");
 var app = express();
-var port = process.env.PORT || 3000;
+var port = 'process.env.postgres://btwcmagfslqszr:f469f09a62d9b1758c84429f576ee8a55c3149e0efb8fe2d4f8b456bda886a2a@ec2-54-221-229-64.compute- 1.amazonaws.com:5432 / d4qrpr8uc8u45s' || 3000;
 var routes = require('./controllers/burgers_controllers.js');
 
 var db = require('./models');
